@@ -3,9 +3,56 @@
 
 #include <iostream>
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/core/utility.hpp>
+
+#include "InputData.h"
+#include "rotations.h"
+#include "collinearRect.h"
+
+using namespace std;
+
 int main()
 {
-    std::cout << "Hello World!\n";
+	collinearRect rectifylowoblique(rectim::OMEGA1, rectim::PHI1, rectim::KAPPA1, rectim::lowObliqueImage);
+	double tilt = rectifylowoblique.getRotation().getTilt();
+	double swing = rectifylowoblique.getRotation().getSwing();
+	cout << "\n =========================    Image tilt : " << tilt << "\tand swing:\t" << swing << "\tdegrees  ================================" << endl;
+
+	if (tilt > 5.0 )
+	{
+		cout << "\nSource image has tilt and swing more than 5 degrees. Progam will quit.................................\n";
+		return EXIT_FAILURE;
+	}
+	else {
+		rectifylowoblique.rectifyPoints();
+		rectifylowoblique.warpVerticalImage();
+	}
+
+
+
+	//collinearRect rectifyhighoblique(rectim::OMEGA2, rectim::PHI2, rectim::KAPPA2, rectim::lowObliqueImage2);
+	//double tilt = rectifyhighoblique.getRotation().getTilt();
+	//double swing = rectifyhighoblique.getRotation().getSwing();
+	//cout << "\n =========================    Image tilt : " << tilt << "\tand swing:\t" << swing << "\tdegrees  ================================" << endl;
+
+	//if (tilt > 5.0)
+	//{
+	//	cout << "\nSource image has tilt and/or swing more than 5 degrees. Progam will quit.................................\n";
+	//	return EXIT_FAILURE;
+	//}
+	//else {
+	//	rectifyhighoblique.rectifyPoints();
+	//	rectifyhighoblique.warpVerticalImage();
+	//}
+
+	
+	std::cout << "Hello World!\n";
+	((cv::waitKey() & 255) /*== 27*/);  // Wait for a keystroke in the window
+	return 0;
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
